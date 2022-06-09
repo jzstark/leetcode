@@ -9,7 +9,7 @@ class ListNode:
         self.next = None
 
 class Solution:
-    def hasCycle(self, head: Optional[ListNode]) -> bool:
+    def hasCycle(self, head):
         
         fast = head
         slow = head
@@ -62,7 +62,3 @@ class Solution2(object):
             slow = slow.next
         
         return fast
-        
-        
-        
-
