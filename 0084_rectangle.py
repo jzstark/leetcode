@@ -5,11 +5,16 @@
 # 如此重复，直到整个数组在把n放进来之后依然是递增的。那么前面那些的那些还没消去怎么办呢？没关系，总会轮到它们的。
 # 只能说这种遍历方式太牛逼了。
 
-
+# Using my own stack impl.:
 # Runtime: 2491 ms, faster than 5.05% of Python online submissions for Largest Rectangle in Histogram.
 # Memory Usage: 33.8 MB, less than 12.35% of Python online submissions for Largest Rectangle in Histogram.
 
+# Using deque:
+# Runtime: 931 ms, faster than 71.48% of Python online submissions for Largest Rectangle in Histogram.
+# Memory Usage: 33.4 MB, less than 12.56% of Python online submissions for Largest Rectangle in Histogram.
 
+
+"""
 class Stack:
     def __init__(self):
         self.stack = []
@@ -19,7 +24,7 @@ class Stack:
         return self.idx
     
     # not very efficient I'm afraid
-    def push(self, a):
+    def append(self, a):
         if self.idx >= len(self.stack) - 1:
             self.stack.append(a)
         elif self.idx < 0: 
@@ -36,7 +41,9 @@ class Stack:
 
     def get(self):
         return self.stack[:self.idx + 1]
-  
+"""
+
+from collections import deque
 
 def largestRectangleArea(heights):
     """
@@ -50,13 +57,13 @@ def largestRectangleArea(heights):
     # sentinel to make sure the stack is clean at the end 
     # and the while-loop is not empty
 
-    s = Stack()
+    s = deque() 
+    #s = Stack()
     max_area = 0
 
-    s.push((heights[0], 0))
+    s.append((heights[0], 0))
     for i, h in enumerate(heights[1:]): # the right boundary
         i += 1 # since we are iterating from the second element
-        #print(s.get())
         tail = s.pop() 
         # non-strict increase stack 
         while tail[0] > h:
@@ -67,8 +74,8 @@ def largestRectangleArea(heights):
             #print(tail[0], h, i, left[1], area)
             if area > max_area : max_area = area
             tail = left
-        s.push(tail)
-        s.push((h, i))
+        s.append(tail)
+        s.append((h, i))
 
     return max_area
 
