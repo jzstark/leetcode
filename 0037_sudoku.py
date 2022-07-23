@@ -13,6 +13,7 @@ def generate_block_id(i, j):
 
 
 def find_valid(i, j, board):
+    if board[i][j] != '.': return {}
     total = set([str(x) for x in range(1,10)])
     total.add('.')
     row = set(board[i])
@@ -32,26 +33,33 @@ def get_next_empty_pos(i, j, board):
     return None
 
 def dfs(i, j, board): #at point i, j 
-    results = []
     values = find_valid(i, j, board)
-    if values == []: return False 
+    if values == {}: return False 
 
     pos = get_next_empty_pos(i, j, board)
-    if pos is None: return False
+    if pos is None: return True # reach the end 
 
     board = copy.deepcopy(board)
     for v in values:
         board[i][j] = v
-        r = dfs(pos[0], pos[1], board) 
-        results.append(r)
-    return all(results)
+        print(i,j,values, v, pos)
+        #r = dfs(pos[0], pos[1], copy.deepcopy(board))
+        r = dfs(pos[0], pos[1], board)
+        if r == True:
+            return True
+    print("=====") 
+    return False
 
 
 def isValidSudoku(board) -> bool:
-    c = [ x.count('.') for x in board ]
-    if 81 - sum(c) <= 15 : return True
-
-    return dfs(0, 0, board)
+    if board[0][0] == '.':
+        pos = (0, 0)
+    else:
+        pos = get_next_empty_pos(0, 0, board)
+    # We assume the original board itself is valid 
+    if pos is None: return True
+    
+    return dfs(pos[0], pos[1], board)
 
 
 board1 = \
@@ -88,6 +96,7 @@ board3 = \
 [".",".",".",".",".",".",".",".","."],
 [".",".",".",".",".",".",".",".","."],
 [".",".",".",".",".",".",".",".","."]]
+# expected: True 
 
 board4 = \
 [[".",".","5",".",".",".",".",".","6"],
@@ -99,5 +108,30 @@ board4 = \
 [".",".",".","5","4",".",".",".","."],
 ["3",".",".",".",".",".","4","2","."],
 [".",".",".","2","7",".","6",".","."]]
+# expected: True 
 
-print(isValidSudoku(board4))
+board5 = \
+[[".","8","7","6","5","4","3","2","1"],
+["2",".",".",".",".",".",".",".","."],
+["3",".",".",".",".",".",".",".","."],
+["4",".",".",".",".",".",".",".","."],
+["5",".",".",".",".",".",".",".","."],
+["6",".",".",".",".",".",".",".","."],
+["7",".",".",".",".",".",".",".","."],
+["8",".",".",".",".",".",".",".","."],
+["9",".",".",".",".",".",".",".","."]]
+# expected: True --- why the fuck?!
+
+board6 = \
+[
+[".",".","4",".",".",".","6","3","."],
+[".",".",".",".",".",".",".",".","."],
+["5",".",".",".",".",".",".","9","."],
+[".",".",".","5","6",".",".",".","."],
+["4",".","3",".",".",".",".",".","1"],
+[".",".",".","7",".",".",".",".","."],
+[".",".",".","5",".",".",".",".","."],
+[".",".",".",".",".",".",".",".","."],
+[".",".",".",".",".",".",".",".","."]]
+
+print(isValidSudoku(board6))
