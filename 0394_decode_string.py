@@ -1,3 +1,12 @@
+"""
+https://algo.itcharge.cn/Solutions/0300-0399/decode-string
+
+important to understand the generalized form of a expression:
+    expression = string + number * [ expression ] 
+here string can be "" and number can be 0. 
+That will lead to a more concise solution
+"""
+
 from collections import deque 
 
 class Solution(object):
